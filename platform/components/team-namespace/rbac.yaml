@@ -1,0 +1,16 @@
+---
+# The team's Entra ID group gets the built-in `edit` role inside its own
+# namespace only. With Azure RBAC enabled on the cluster, the group also
+# needs "Azure Kubernetes Service Cluster User Role" to fetch credentials.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: team-edit
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Group
+    name: ENTRA_GROUP_OBJECT_ID

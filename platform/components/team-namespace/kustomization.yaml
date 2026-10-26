@@ -1,0 +1,72 @@
+---
+# Namespace-as-a-service. A team overlay sets `namespace:` and provides a
+# `team-config` ConfigMap (marked local-config, so it is never applied).
+# The replacements below copy those values into every object, which keeps the
+# template plain Kubernetes YAML that `kustomize build` renders offline.
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - namespace.yaml
+  - resource-quota.yaml
+  - limit-range.yaml
+  - network-policies.yaml
+  - rbac.yaml
+  - service-account.yaml
+replacements:
+  - source:
+      kind: ConfigMap
+      name: team-config
+      fieldPath: data.team
+    targets:
+      - select:
+          kind: Namespace
+        fieldPaths:
+          - metadata.labels.team
+  - source:
+      kind: ConfigMap
+      name: team-config
+      fieldPath: data.costCenter
+    targets:
+      - select:
+          kind: Namespace
+        fieldPaths:
+          - metadata.labels.cost-center
+  - source:
+      kind: ConfigMap
+      name: team-config
+      fieldPath: data.entraGroupObjectId
+    targets:
+      - select:
+          kind: RoleBinding
+          name: team-edit
+        fieldPaths:
+          - subjects.0.name
+  - source:
+      kind: ConfigMap
+      name: team-config
+      fieldPath: data.workloadIdentityClientId
+    targets:
+      - select:
+          kind: ServiceAccount
+          name: workload
+        fieldPaths:
+          - metadata.annotations.[azure.workload.identity/client-id]
+  - source:
+      kind: ConfigMap
+      name: team-config
+      fieldPath: data.quotaCpu
+    targets:
+      - select:
+          kind: ResourceQuota
+        fieldPaths:
+          - spec.hard.[requests.cpu]
+  - source:
+      kind: ConfigMap
+      name: team-config
+      fieldPath: data.quotaMemory
+    targets:
+      - select:
+          kind: ResourceQuota
+        fieldPaths:
+          - spec.hard.[requests.memory]
+          - spec.hard.[limits.memory]

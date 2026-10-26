@@ -1,0 +1,17 @@
+---
+# Defaults for containers that do not declare resources, so that the quota
+# and the require-resources constraint never surprise a first deployment.
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: team-defaults
+spec:
+  limits:
+    - type: Container
+      defaultRequest:
+        cpu: 50m
+        memory: 64Mi
+      default:
+        memory: 256Mi
+      max:
+        memory: 4Gi

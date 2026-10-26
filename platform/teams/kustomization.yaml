@@ -1,0 +1,7 @@
+---
+# One line per team. Onboarding a team is a pull request that adds a folder
+# under teams/ and a line here (docs/onboarding-a-team.md).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - podinfo

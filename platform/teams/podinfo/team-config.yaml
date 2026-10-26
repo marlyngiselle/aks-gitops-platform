@@ -1,0 +1,15 @@
+---
+# Per-team inputs for the namespace template. Never applied to the cluster.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: team-config
+  annotations:
+    config.kubernetes.io/local-config: "true"
+data:
+  team: podinfo
+  costCenter: cc-1001
+  entraGroupObjectId: 33333333-3333-3333-3333-333333333333
+  workloadIdentityClientId: 44444444-4444-4444-4444-444444444444
+  quotaCpu: "4"
+  quotaMemory: 8Gi

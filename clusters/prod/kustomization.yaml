@@ -6,3 +6,5 @@ kind: Kustomization
 resources:
   - infrastructure.yaml
   - policies.yaml
+  - platform.yaml
+  - apps.yaml

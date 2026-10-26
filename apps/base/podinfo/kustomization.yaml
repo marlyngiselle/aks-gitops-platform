@@ -1,0 +1,9 @@
+---
+# Sample tenant application. It lives in the namespace created by
+# platform/teams/podinfo and has to pass the same policies as any team.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: team-podinfo
+resources:
+  - repository.yaml
+  - release.yaml

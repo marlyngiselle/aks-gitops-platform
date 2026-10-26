@@ -1,0 +1,8 @@
+---
+# Cluster-wide configuration that needs the CRDs installed by the
+# controllers layer (cert-manager ClusterIssuers, Prometheus PodMonitors).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - cluster-issuers.yaml
+  - gatekeeper-podmonitor.yaml

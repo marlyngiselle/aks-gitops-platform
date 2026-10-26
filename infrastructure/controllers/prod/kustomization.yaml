@@ -1,0 +1,46 @@
+---
+# Prod: zone-spread replicas, longer retention, external-dns enabled and the
+# Gatekeeper webhook failing closed.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+  - ../../optional/external-dns
+patches:
+  - target:
+      kind: HelmRelease
+      name: ingress-nginx
+    patch: |-
+      - op: replace
+        path: /spec/values/controller/replicaCount
+        value: 3
+  - target:
+      kind: HelmRelease
+      name: cert-manager
+    patch: |-
+      - op: replace
+        path: /spec/values/replicaCount
+        value: 2
+  - target:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    patch: |-
+      - op: replace
+        path: /spec/values/prometheus/prometheusSpec/retention
+        value: 15d
+      - op: add
+        path: /spec/values/prometheus/prometheusSpec/replicas
+        value: 2
+      - op: add
+        path: /spec/values/alertmanager/alertmanagerSpec/replicas
+        value: 2
+  - target:
+      kind: HelmRelease
+      name: gatekeeper
+    patch: |-
+      - op: replace
+        path: /spec/values/replicas
+        value: 3
+      - op: replace
+        path: /spec/values/validatingWebhookFailurePolicy
+        value: Fail

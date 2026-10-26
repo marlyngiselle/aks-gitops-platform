@@ -1,0 +1,35 @@
+---
+# Dev: single replicas and short retention. external-dns stays off; records
+# are created by hand or by a wildcard entry.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+patches:
+  - target:
+      kind: HelmRelease
+      name: ingress-nginx
+    patch: |-
+      - op: replace
+        path: /spec/values/controller/replicaCount
+        value: 1
+  - target:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    patch: |-
+      - op: replace
+        path: /spec/values/prometheus/prometheusSpec/retention
+        value: 3d
+      - op: replace
+        path: /spec/values/prometheus/prometheusSpec/retentionSize
+        value: 15GB
+      - op: replace
+        path: /spec/values/prometheus/prometheusSpec/storageSpec/volumeClaimTemplate/spec/resources/requests/storage
+        value: 20Gi
+  - target:
+      kind: HelmRelease
+      name: gatekeeper
+    patch: |-
+      - op: replace
+        path: /spec/values/replicas
+        value: 1

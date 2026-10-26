@@ -1,0 +1,16 @@
+---
+# Scrapes Gatekeeper's audit and admission metrics, e.g.
+# gatekeeper_violations{enforcement_action="dryrun"}. Lives in the configs
+# layer because the PodMonitor CRD is installed by kube-prometheus-stack.
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: gatekeeper
+  namespace: gatekeeper-system
+spec:
+  selector:
+    matchLabels:
+      gatekeeper.sh/system: "yes"
+  podMetricsEndpoints:
+    - port: metrics
+      interval: 30s

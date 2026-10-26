@@ -1,0 +1,7 @@
+---
+# Opt-in component: include it from an environment overlay to manage DNS
+# records in Azure DNS for Ingress and Service objects.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - external-dns.yaml

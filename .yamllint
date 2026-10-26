@@ -1,0 +1,21 @@
+---
+extends: default
+
+ignore: |
+  .terraform/
+
+rules:
+  line-length:
+    max: 200
+    level: warning
+  indentation:
+    spaces: 2
+    indent-sequences: consistent
+  truthy:
+    allowed-values: ["true", "false"]
+    # GitHub Actions uses `on:` as a key.
+    check-keys: false
+  comments:
+    min-spaces-from-content: 1
+  document-start:
+    present: true

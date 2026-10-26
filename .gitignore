@@ -1,0 +1,29 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfplan
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+# Real variable files stay out of Git; the committed ones hold placeholders.
+*.auto.tfvars
+secrets.tfvars
+
+# TFLint plugins
+.tflint.d/
+
+# Kubernetes
+kubeconfig
+*.kubeconfig
+
+# Editors and OS
+.idea/
+.vscode/
+*.swp
+.DS_Store

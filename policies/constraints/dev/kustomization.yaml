@@ -1,0 +1,15 @@
+---
+# Dev: every constraint runs in dryrun. Violations show up in the audit
+# results (kubectl get constraints) without blocking anyone, which is how new
+# policies are trialled before they reach prod.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+patches:
+  - target:
+      group: constraints.gatekeeper.sh
+    patch: |-
+      - op: replace
+        path: /spec/enforcementAction
+        value: dryrun

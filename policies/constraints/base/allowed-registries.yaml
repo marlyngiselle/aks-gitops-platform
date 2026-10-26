@@ -1,0 +1,20 @@
+---
+# Tenant images come from the platform registry. Upstream images used by the
+# sample app are listed explicitly; add a registry here through a pull request.
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sAllowedRepos
+metadata:
+  name: allowed-registries
+spec:
+  enforcementAction: deny
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    namespaceSelector:
+      matchLabels:
+        platform.example.com/tier: tenant
+  parameters:
+    repos:
+      - contosoplatform.azurecr.io/
+      - ghcr.io/stefanprodan/

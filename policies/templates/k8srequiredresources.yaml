@@ -1,0 +1,59 @@
+---
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequiredresources
+  annotations:
+    description: >-
+      Requires containers to declare the listed resource requests and limits.
+      Namespaces created from the platform template carry a LimitRange, so
+      most workloads get defaults injected before this check runs.
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredResources
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            requests:
+              type: array
+              description: Resource names that must have a request, e.g. cpu, memory.
+              items:
+                type: string
+            limits:
+              type: array
+              description: Resource names that must have a limit, e.g. memory.
+              items:
+                type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8srequiredresources
+
+        violation[{"msg": msg}] {
+          c := input_containers[_]
+          r := input.parameters.requests[_]
+          not has_resource(c, "requests", r)
+          msg := sprintf("container <%v> must set resources.requests.%v", [c.name, r])
+        }
+
+        violation[{"msg": msg}] {
+          c := input_containers[_]
+          r := input.parameters.limits[_]
+          not has_resource(c, "limits", r)
+          msg := sprintf("container <%v> must set resources.limits.%v", [c.name, r])
+        }
+
+        has_resource(c, field, r) {
+          c.resources[field][r]
+        }
+
+        input_containers[c] {
+          c := input.review.object.spec.containers[_]
+        }
+
+        input_containers[c] {
+          c := input.review.object.spec.initContainers[_]
+        }

@@ -1,0 +1,24 @@
+---
+# Every namespace outside the system set must say who owns it and who pays
+# for it. Cost reports and alert routing depend on these labels.
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: namespace-required-labels
+spec:
+  enforcementAction: deny
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Namespace"]
+    excludedNamespaces:
+      - default
+      - kube-system
+      - kube-public
+      - kube-node-lease
+      - flux-system
+      - gatekeeper-system
+  parameters:
+    labels:
+      - team
+      - cost-center

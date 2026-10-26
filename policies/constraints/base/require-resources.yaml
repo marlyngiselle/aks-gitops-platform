@@ -1,0 +1,23 @@
+---
+# CPU requests and memory requests/limits are mandatory. CPU limits are
+# deliberately not required: they cause throttling without protecting the
+# node, while memory limits do.
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredResources
+metadata:
+  name: require-resources
+spec:
+  enforcementAction: deny
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    namespaceSelector:
+      matchLabels:
+        platform.example.com/tier: tenant
+  parameters:
+    requests:
+      - cpu
+      - memory
+    limits:
+      - memory

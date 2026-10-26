@@ -1,0 +1,19 @@
+---
+# Tenant workloads carry the recommended app label so dashboards, network
+# policies and cost tooling can group them.
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: workload-required-labels
+spec:
+  enforcementAction: deny
+  match:
+    kinds:
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+    namespaceSelector:
+      matchLabels:
+        platform.example.com/tier: tenant
+  parameters:
+    labels:
+      - app.kubernetes.io/name

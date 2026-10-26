@@ -1,0 +1,11 @@
+---
+# Constraints are written once, with enforcementAction: deny. Environment
+# overlays decide whether a constraint blocks (deny) or only reports (dryrun).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace-required-labels.yaml
+  - workload-required-labels.yaml
+  - disallow-privileged.yaml
+  - require-resources.yaml
+  - allowed-registries.yaml

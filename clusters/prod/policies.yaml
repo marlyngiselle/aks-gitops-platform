@@ -1,0 +1,38 @@
+---
+# Layer 2a: Gatekeeper ConstraintTemplates. Each template registers a CRD for
+# its constraint kind, so constraints come in a separate, later Kustomization.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: policy-templates
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: infra-controllers
+  interval: 1h
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: cluster-config
+  path: ./policies/templates
+  prune: true
+  wait: true
+---
+# Layer 2b: Constraints, with the enforcement mode chosen per environment.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: policy-constraints
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: policy-templates
+  interval: 1h
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: cluster-config
+  path: ./policies/constraints/prod
+  prune: true
